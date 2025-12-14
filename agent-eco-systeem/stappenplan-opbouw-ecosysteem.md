@@ -50,19 +50,14 @@ graph LR
 ### Activiteiten
 
 1. **Schrijf architectuurdocument** (`architectuur-agent-eco-systeem.md`)
-   - System Context diagram
-   - Container diagram (Standards, Agent-Capabilities, Delivery Framework, Project Workspace)
-   - Component diagrams per container
+   - System Context (actors en interacties)
+   - Container beschrijvingen (GitHub Standards, GitHub Agent-Capabilities, Project Workspace)
+   - Component beschrijvingen per container
    - Data flow voorbeelden
    - Deployment view
    - Architectuurprincipes en ADR's
 
-2. **Creëer Structurizr workspace** (`workspace.dsl`)
-   - C4 model in DSL
-   - Renderbare diagrammen
-   - Views voor alle niveaus
-
-3. **Valideer met stakeholders**
+2. **Valideer met stakeholders**
    - Architectuur-review
    - Feedback verwerken
    - Sign-off
@@ -72,12 +67,10 @@ graph LR
 
 ### Exit Criteria
 - ✅ Architectuurdocument volledig
-- ✅ C4 diagrammen renderbaar in Structurizr
 - ✅ Stakeholder sign-off
 
 ### Artefacten
 - `architectuur-agent-eco-systeem.md`
-- `workspace.dsl`
 
 ### Duur
 **1-2 dagen** (met reviews)

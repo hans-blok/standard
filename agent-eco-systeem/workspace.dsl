@@ -7,7 +7,6 @@ workspace "Agent Ecosysteem" "Gegoverned ecosysteem van gespecialiseerde AI-agen
         
         llmProvider = softwareSystem "LLM Provider" "Claude, GPT-4 - AI inference" "External"
         github = softwareSystem "GitHub" "Code repository, standards repository" "External"
-        safeFramework = softwareSystem "SAFe Framework" "Scaled Agile principes" "External"
         
         agentEcosysteem = softwareSystem "Agent Ecosysteem" "Gegoverned netwerk van AI-agents voor software delivery" {
             
@@ -51,7 +50,6 @@ workspace "Agent Ecosysteem" "Gegoverned ecosysteem van gespecialiseerde AI-agen
         # External system interactions
         agentEcosysteem -> llmProvider "Gebruikt voor inferentie" "API"
         agentEcosysteem -> github "Leest standards, persisteert output" "Git"
-        agentEcosysteem -> safeFramework "Volgt principes" "Reference"
         
         # User to Capabilities
         user -> agentEcosysteem.capabilities "Activeert agent via prompt" "Natural language"

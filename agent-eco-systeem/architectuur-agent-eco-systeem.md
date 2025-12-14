@@ -8,31 +8,13 @@ Dit document beschrijft de **software-architectuur van het Agent Ecosysteem** �
 1. **Dit document** beschrijft WAT we bouwen (de architectuur van het ecosysteem zelf)
 2. Een apart document beschrijft HOE we het bouwen (het stappenplan/value stream voor het opzetten van het ecosysteem)
 
-Deze architectuur volgt C4-model principes en toont de **statische structuur** van het ecosysteem.
+Deze architectuur beschrijft de **statische structuur** van het ecosysteem: systemen, containers, componenten en hun onderlinge relaties.
 
 ---
 
 ## 2. System Context
 
-```mermaid
-C4Context
-    title System Context - Agent Ecosysteem
-
-    Person(user, "Gebruiker", "Software engineer, architect, product owner")
-    
-    System(agentEco, "Agent Ecosysteem", "Gegoverned netwerk van AI-agents voor software delivery")
-    
-    System_Ext(llm, "LLM Provider", "Claude, GPT-4 - AI inference")
-    System_Ext(github, "GitHub", "Code repository, standards repository")
-    System_Ext(safe, "SAFe Framework", "Scaled Agile principes")
-    
-    Rel(user, agentEco, "Geeft opdracht (≤5 regels)", "Natural language")
-    Rel(agentEco, user, "Levert artefacten", "Markdown, code")
-    
-    Rel(agentEco, llm, "Gebruikt voor inferentie", "API")
-    Rel(agentEco, github, "Leest standards, persisteert output", "Git")
-    Rel(agentEco, safe, "Volgt principes", "Reference")
-```
+Het Agent Ecosysteem heeft interacties met externe systemen:
 
 ### Externe Actors
 
@@ -41,10 +23,8 @@ C4Context
 **LLM Provider**: Levert AI inference capabilities (Claude, GPT-4, etc.). Het ecosysteem is model-agnostisch.
 
 **GitHub**: 
-- **Standards Repository** (`standards/`): Bevat governance, charters, templates
+- **GitHub Standards Repository** (`standards/`): Bevat governance, charters, templates
 - **Project Repository**: Bevat gegenereerde artefacten (specs, designs, code)
-
-**SAFe Framework**: Externe referentie voor Development Value Stream principes en best practices.
 
 ---
 
@@ -52,32 +32,11 @@ C4Context
 
 Het Agent Ecosysteem bestaat uit **3 primaire containers**:
 
-```mermaid
-C4Container
-    title Container Diagram - Agent Ecosysteem
+1. **GitHub Standards** - Governance regels, charters, templates
+2. **GitHub Agent-Capabilities** - Agent-definities en prompts
+3. **Project Workspace** - Gegenereerde artefacten per project
 
-    Person(user, "Gebruiker")
-    
-    System_Boundary(eco, "Agent Ecosysteem") {
-        Container(standards, "Standards", "Git Repository", "Governance regels, charters, templates, delivery framework")
-        Container(capabilities, "Agent-Capabilities", "Git Repository", "Agent-definities en prompts")
-        Container(workspace, "Project Workspace", "Git Repository", "Gegenereerde artefacten per project")
-    }
-    
-    System_Ext(llm, "LLM Provider")
-    System_Ext(github, "GitHub")
-    
-    Rel(user, capabilities, "Activeert agent via prompt")
-    Rel(capabilities, standards, "Leest charters, regels en framework", "File I/O")
-    Rel(capabilities, workspace, "Schrijft/leest artefacten", "File I/O")
-    Rel(capabilities, llm, "Gebruikt voor inferentie", "API")
-    
-    Rel(standards, github, "Gepersisteerd in", "standards repo")
-    Rel(capabilities, github, "Gepersisteerd in", "standards repo")
-    Rel(workspace, github, "Gepersisteerd in", "project repo")
-```
-
-### Container: Standards
+### Container: GitHub Standards
 
 **Type**: Git Repository  
 **Locatie**: `github.com/org/standards/`
@@ -173,26 +132,16 @@ project-name/
 
 ---
 
-## 4. Component Diagram: Standards
+## 4. Component Diagram: GitHub Standards
 
-```mermaid
-C4Component
-    title Component Diagram - Standards Container
+De GitHub Standards container bevat 6 componenten:
 
-    Container_Boundary(standards, "Standards") {
-        Component(constitutie, "Constitutie", "Markdown", "Universele principes")
-        Component(beleid, "Beleid", "Markdown", "Repository-specifieke regels")
-        Component(agentCharters, "Agent Charters", "Markdown", "Operationele bevoegdheden per agent")
-        Component(faseCharters, "Fase Charters", "Markdown", "Kwaliteitseisen per SAFe-fase")
-        Component(deliveryFramework, "Delivery Framework", "Markdown", "SAFe Development Value Stream (A-G+U fases)")
-        Component(templates, "Templates", "Markdown", "Charter templates")
-    }
-    
-    Rel(constitutie, beleid, "Overschrijft", "Hierarchy")
-    Rel(beleid, agentCharters, "Overschrijft", "Hierarchy")
-    Rel(deliveryFramework, faseCharters, "Definieert fases voor")
-    Rel(faseCharters, agentCharters, "Definieert kwaliteitseisen voor")
-```
+1. **Constitutie** - Universele principes
+2. **Beleid** - Repository-specifieke regels
+3. **Agent Charters** - Operationele bevoegdheden per agent
+4. **Fase Charters** - Kwaliteitseisen per SAFe-fase
+5. **Delivery Framework** - SAFe Development Value Stream (A-G+U fases)
+6. **Templates** - Charter templates
 
 **Governance Hierarchie**:
 1. **Constitutie** — Absoluut, universeel, bindend
@@ -214,42 +163,12 @@ C4Component
 
 ---
 
-## 5. Component Diagram: Agent-Capabilities
+## 5. Component Diagram: GitHub Agent-Capabilities
 
-```mermaid
-C4Component
-    title Component Diagram - Agent-Capabilities Container
+De GitHub Agent-Capabilities container bevat agents georganiseerd per SAFe-fase:
 
-    Container_Boundary(capabilities, "Agent-Capabilities") {
-        Component(moeder, "Moeder Agent", "Meta-agent", "Agent factory, charter designer")
-        
-        Component(agentA, "Fase A Agents", "Trigger", "Business case analyse")
-        Component(agentB, "Fase B Agents", "Architectuur", "ADR's, patterns")
-        Component(agentC, "Fase C Agents", "Specificatie", "Features, datamodellen")
-        Component(agentD, "Fase D Agents", "Ontwerp", "Solution design")
-        Component(agentE, "Fase E Agents", "Bouw", "Code generatie")
-        Component(agentF, "Fase F Agents", "Validatie", "Testing")
-        Component(agentG, "Fase G Agents", "Deployment", "Release management")
-        
-        Component(agentU, "Utility Agents", "Utility", "Charter schrijver, MD-to-DSL converter")
-    }
-    
-    Container_Ext(standards, "Standards")
-    
-    Rel(moeder, agentA, "Activeert", "Orchestration")
-    Rel(moeder, agentB, "Activeert", "Orchestration")
-    Rel(moeder, standards, "Leest governance", "File I/O")
-    
-    Rel(agentA, standards, "Leest charter en framework", "File I/O")
-    Rel(agentB, standards, "Leest charter en framework", "File I/O")
-    Rel(agentC, standards, "Leest charter en framework", "File I/O")
-```
-
-**Moeder Agent** (Meta-agent):
-- Bepaalt welke agents nodig zijn
-- Creëert en valideert charters
-- Bewaakt scope en overlap
-- Positioneert agents in juiste fase
+**Meta-agent**:
+- **Moeder Agent** - Agent factory, charter designer, orchestrator
 
 **Fase Agents** (A-G):
 - Exact 1 fase per agent-groep
@@ -294,27 +213,42 @@ sequenceDiagram
 
 ## 7. Deployment View
 
-```mermaid
-C4Deployment
-    title Deployment Diagram - Agent Ecosysteem
+Het Agent Ecosysteem draait in een gedistribueerde omgeving:
 
-    Deployment_Node(github, "GitHub", "Git Platform") {
-        Container(standardsRepo, "standards/", "Repository")
-        Container(projectRepo, "project-name/", "Repository")
-    }
-    
-    Deployment_Node(local, "Lokale Machine", "Developer Workstation") {
-        Container(vscode, "VS Code", "IDE + Copilot Extension")
-    }
-    
-    Deployment_Node(cloud, "Cloud", "AI Provider") {
-        Container(llmApi, "Claude/GPT-4", "LLM API")
-    }
-    
-    Rel(vscode, standardsRepo, "Leest charters", "Git clone/pull")
-    Rel(vscode, projectRepo, "Schrijft artefacten", "Git commit/push")
-    Rel(vscode, llmApi, "Agent inferentie", "HTTPS")
-```
+**GitHub Platform**:
+- `standards/` repository (GitHub Standards container)
+- `project-name/` repository (Project Workspace container)
+
+**Lokale Machine** (Developer Workstation):
+- VS Code met GitHub Copilot Extension
+- Lokale Git clone van standards repository
+- Lokale Git clone van project repository
+
+**Cloud** (AI Provider):
+- Claude/GPT-4 LLM API
+
+**Interacties**:
+
+## 7. Deployment View
+
+Het Agent Ecosysteem draait in een gedistribueerde omgeving:
+
+**GitHub Platform**:
+- `standards/` repository (GitHub Standards container)
+- `project-name/` repository (Project Workspace container)
+
+**Lokale Machine** (Developer Workstation):
+- VS Code met GitHub Copilot Extension
+- Lokale Git clone van standards repository
+- Lokale Git clone van project repository
+
+**Cloud** (AI Provider):
+- Claude/GPT-4 LLM API
+
+**Interacties**:
+- VS Code leest charters via Git clone/pull
+- VS Code schrijft artefacten via Git commit/push
+- VS Code gebruikt LLM API voor agent inferentie
 
 **Runtime Environment**: VS Code met GitHub Copilot (of equivalent)  
 **Standards**: Git-gebaseerd, lokaal gecached  
@@ -404,7 +338,7 @@ Alle governance, agents en artefacten zijn Git-versioned voor traceerbaarheid en
 - Moeder Agent activeert andere agents, maar is zelf niet persistent
 - Vergelijk: Een ontwikkelteam bouwt een applicatie, maar is geen onderdeel van de applicatie-architectuur
 
-**Implicatie**: C4 diagram toont ALLEEN wat we bouwen (repositories, artefacten), NIET hoe we het bouwen (meta-agents).
+**Implicatie**: Architectuurdiagrammen tonen ALLEEN wat we bouwen (repositories, artefacten), NIET hoe we het bouwen (meta-agents).
 
 ### ADR: SAFe als Delivery Framework
 
