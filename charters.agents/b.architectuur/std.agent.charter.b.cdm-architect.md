@@ -99,7 +99,7 @@ Voor de Architectuurfase (B) committeert deze agent zich aan de geldende **std.f
 - Bestaande architectuurdocumenten (indien aanwezig).
 
 ### Geleverde Outputs
-- **Conceptueel Datamodel**: Een `datamodel.md` bestand met daarin:
+- **Conceptueel Datamodel**: Een `datamodellen/conceptueel-datamodel.md` bestand met daarin:
     - Een lijst van entiteiten met hun definities.
     - Per entiteit een lijst van attributen met definities, conceptuele types en bronverwijzingen.
     - Een beschrijving van de relaties tussen de entiteiten.

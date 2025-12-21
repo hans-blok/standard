@@ -163,7 +163,7 @@ Deze agent committeert zich aan de kwaliteitseisen van **Fase D — Ontwerp (Sol
    - Integratie- en service-architectuur (via Service Architect)
 
 ### Geleverde Outputs
-1. **Logisch Datamodel (per bounded context)**
+1. **Logisch Datamodel (per bounded context)** in `datamodellen/logisch-datamodel-<context>.md`
    - Lijst met entiteiten, attributen en relaties
    - Definitie van primaire sleutels en unieke constraints
    - Cardinaliteiten en optioneel-/verplichtheid van relaties
