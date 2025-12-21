@@ -102,7 +102,7 @@ Voor de Architectuurfase (B) committeert deze agent zich aan de geldende **std.f
 - **Conceptueel Datamodel**: Een `datamodellen/conceptueel-datamodel.md` bestand met daarin:
     - Een lijst van entiteiten met hun definities.
     - Per entiteit een lijst van attributen met definities, conceptuele types en bronverwijzingen.
-    - Een beschrijving van de relaties tussen de entiteiten.
+    - Een beschrijving van de relaties tussen de entiteiten, in beide leesrichtingen (bijv. "Competitie 'is van' Competitie Type" en "Competitie Type 'classificeert' Competitie").
     - Een visualisatie van het model (bijv. in Mermaid-syntax).
 
 ---

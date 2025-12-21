@@ -28,7 +28,7 @@ De `md-to-archi-xml-agent` is een utility-agent die als doel heeft om gestructur
 - Lezen van `conceptueel-datamodel.md` en `logisch-datamodel-*.md` uit de `designs/datamodellen/` map.
 - Mappen van entiteiten uit het **conceptueel datamodel** naar `Business Object` elementen in de Archi Business Layer.
 - Mappen van entiteiten uit het **logisch datamodel** naar `Data Object` elementen in de Archi Application Layer.
-- Vertalen van relaties (zoals beschreven in Mermaid-syntax of tekst) naar `Association`, `Composition` of `Aggregation` relaties in Archi.
+- Vertalen van relaties naar een **enkele** ArchiMate-relatie tussen twee entiteiten. De beschrijvingen van beide leesrichtingen worden samengevoegd tot één label, gescheiden door " - " (bijv. "is van - classificeert" voor de relatie tussen Competitie en Competitie Type).
 - Toevoegen van definities en eigenschappen uit de Markdown als documentatie en properties aan de Archi-elementen.
 - Genereren van een XML-bestand dat voldoet aan het ArchiMate-bestandsformaat.
 
