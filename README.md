@@ -1,6 +1,6 @@
 # Standards — Agent Eco-systeem Governance
 
-**Versie**: 1.2.0  
+**Versie**: 1.3.0  
 **Status**: Active  
 **Last Updated**: 2025-12-30
 
@@ -24,10 +24,11 @@ De **standards** repository is het governancecentrum van het **Agent Eco-systeem
                           ↓ aanroepen
 ┌─────────────────────────────────────────────────────────────┐
 │  Project-Workspaces (Lokaal, "schoon")                      │
-│  ├── /A-Trigger/         — Gegenereerde artefacten          │
-│  ├── /B-Architectuur/    — Gegenereerde artefacten          │
-│  ├── /C-Specificatie/    — Gegenereerde artefacten          │
-│  └── ...                                                     │
+│  └── /artefacten/        — Alle gegenereerde artefacten     │
+│      ├── a.trigger/                                          │
+│      ├── b.architectuur/                                     │
+│      ├── c.specificatie/                                     │
+│      └── ...                                                 │
 │  GEEN .github/agents/, GEEN .github/prompts/                │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -119,18 +120,19 @@ standards/
 
 ### 2. Artefact-Generatie
 
-Agents genereren artefacten in fase-folders conform het Delivery Framework:
+Agents genereren artefacten in de **artefacten** folder conform het Delivery Framework:
 
 ```
 Project-Workspace/
-├── A-Trigger/          — Business cases, initiaties
-├── B-Architectuur/     — ADR's, architectuurpatronen
-├── C-Specificatie/     — Requirements, features, datamodellen
-├── D-Ontwerp/          — API designs, technisch ontwerp
-├── E-Bouw/             — Code, scripts, implementatie
-├── F-Validatie/        — Test rapporten, validatie
-├── G-Deployment/       — Release notes, deployment scripts
-└── U-Utility/          — Ondersteunende tools en utilities
+└── artefacten/
+    ├── a.trigger/          — Business cases, initiaties
+    ├── b.architectuur/     — ADR's, architectuurpatronen
+    ├── c.specificatie/     — Requirements, features, datamodellen
+    ├── d.ontwerp/          — API designs, technisch ontwerp
+    ├── e.bouw/             — Code, scripts, implementatie
+    ├── f.validatie/        — Test rapporten, validatie
+    ├── g.deployment/       — Release notes, deployment scripts
+    └── u.utility/          — Ondersteunende tools en utilities
 ```
 
 ### 3. PowerShell Scripts
@@ -232,8 +234,7 @@ Lokale repositories waar:
 
 | Datum | Versie | Wijziging |
 |------|--------|-----------|
-| 2025-12-30 | 1.2.0 | Initiële README — Agent Eco-systeem architectuur, schone project-workspaces, centrale agent-beheer |
-
+| 2025-12-30 | 1.2.0 | Initiële README — Agent Eco-systeem architectuur, schone project-workspaces, centrale agent-beheer || 2025-12-30 | 1.3.0 | Gewijzigd: Folder-structuur naar artefacten/* met naamgevingsconventie `<fase letter lowercase>.<fase naam>` |
 ---
 
 **Voor gedetailleerde governance-regels, zie [std.beleid.md](governance/std.beleid.md)**

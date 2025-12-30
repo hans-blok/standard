@@ -365,65 +365,69 @@ De **moeder-agent** plaatst elke nieuwe agent in een fase van de workflow:
 
 2. **Fase bepaling**: Op basis van de agent-context bepaalt de moeder-agent in welke fase de agent hoort
 
-3. **Folder structuur**: Agent bestanden worden geplaatst in fase-folders:
+3. **Folder structuur**: Artefacten worden geplaatst in artefacten-folders:
    ```
-   /.github/agents/
-       /A-Trigger/
-       /B-Architectuur/
-       /C-Specificatie/
-       /D-Ontwerp/
-       /E-Bouw/
-       /F-Validatie/
-       /G-Deployment/
-       /U-Utility/
-   
-   /.github/prompts/
-       /A-Trigger/
-       /B-Architectuur/
-       /C-Specificatie/
-       /D-Ontwerp/
-       /E-Bouw/
-       /F-Validatie/
-       /G-Deployment/
-       /U-Utility/
-   
-   /desc-agents/
-       /A-Trigger/
-       /B-Architectuur/
-       /C-Specificatie/
-       /D-Ontwerp/
-       /E-Bouw/
-       /F-Validatie/
-       /G-Deployment/
-       /U-Utility/
+   /artefacten/
+       /a.trigger/
+       /b.architectuur/
+       /c.specificatie/
+       /d.ontwerp/
+       /e.bouw/
+       /f.validatie/
+       /g.deployment/
+       /u.utility/
+   ```
+
+   **Agent bestanden blijven in de standards repository**:
+   ```
+   standards/
+   ├── .github/agents/
+   │   └── std.<fase>.<naam>.agent.md
+   ├── .github/prompts/
+   │   └── std.<fase>.<naam>.prompt.md
+   └── charters.agents/<fase>/
+       └── std.agent.charter.<fase>.<naam>.md
    ```
 
 4. **Autonome plaatsing**: De moeder-agent neemt deze beslissing zelfstandig op basis van de agent-context
 
 ### Agent Naamgeving
 
-**Formaat**: `<kit-naam>.<fase>.<agent-naam>`
+**Formaat**: `std.<fase>.<agent-naam>`
 
 **Voorbeelden**:
-- `dms.C.specificeer` — Specificatie agent in DMS kit
-- `tlx.E.genereer` — Code generatie agent in TLX kit
-- `cmr.U.convert` — Utility conversie agent in CMR kit
-- `gen.B.adr` — Architectuur beslissing agent in GEN kit
+- `std.c.specificeer` — Specificatie agent
+- `std.e.genereer` — Code generatie agent
+- `std.u.convert` — Utility conversie agent
+- `std.b.adr` — Architectuur beslissing agent
+
+**Fase-letters (lowercase)**:
+- `a` = Trigger
+- `b` = Architectuur
+- `c` = Specificatie
+- `d` = Ontwerp
+- `e` = Bouw
+- `f` = Validatie
+- `g` = Deployment
+- `u` = Utility
 
 ### Agent Bestanden
 
-Voor een agent genaamd `dms.C.specificeer`:
+Voor een agent genaamd `std.c.specificeer`:
 
+**In standards repository**:
 ```
-/.github/agents/C-Specificatie/dms.C.specificeer.agent.md
-/.github/prompts/C-Specificatie/dms.C.specificeer.prompt.md
-/desc-agents/C-Specificatie/01-specificeer.md
+/.github/agents/std.c.specificeer.agent.md
+/.github/prompts/std.c.specificeer.prompt.md
+/charters.agents/c.specificatie/std.agent.charter.c.specificeer.md
+/desc-agents/specificeer-agent.md
 ```
 
-**Volgnummering in beschrijvingen**:
-- Binnen elke fase krijgen agents een volgnummer (01, 02, 03, etc.)
-- Volgnummer bepaalt volgorde binnen de fase
-- Utility agents krijgen ook volgnummers (01, 02, 03, etc.)
+**In project-workspace** (artefacten):
+```
+/artefacten/c.specificatie/requirements.md
+/artefacten/c.specificatie/user-stories.md
+```
 
 ---
 

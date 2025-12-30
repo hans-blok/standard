@@ -1,7 +1,7 @@
 # Beleid — Standards Repository
 
 **Repository**: standards  
-**Versie**: 1.3.0  
+**Versie**: 1.4.0  
 **Status**: Active  
 **Last Updated**: 2025-12-30  
 **Eigenaar**: Architecture & AI Enablement
@@ -26,10 +26,11 @@ Dit beleid is onderdeel van een **centraal agent eco-systeem** met de volgende a
                           ↓ aanroepen
 ┌─────────────────────────────────────────────────────────────┐
 │  Project-Workspaces (Lokaal, "schoon")                      │
-│  ├── /A-Trigger/         — Gegenereerde artefacten          │
-│  ├── /B-Architectuur/    — Gegenereerde artefacten          │
-│  ├── /C-Specificatie/    — Gegenereerde artefacten          │
-│  └── ...                                                     │
+│  └── /artefacten/        — Alle gegenereerde artefacten     │
+│      ├── a.trigger/                                          │
+│      ├── b.architectuur/                                     │
+│      ├── c.specificatie/                                     │
+│      └── ...                                                 │
 │  GEEN .github/agents/, GEEN .github/prompts/                │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -113,37 +114,42 @@ Alle artefacten die door agents worden gegenereerd, worden aangemaakt in de **lo
 - **Output naar project**: Artefacten worden gegenereerd in de project-specifieke locatie
 
 ### 5.3 Folder-structuur conform Delivery Framework
-Alle artefacten worden in folders geplaatst conform het **Delivery Framework** zoals beschreven in `governance/delivery-framework.md`.
+Alle artefacten worden in de **artefacten** folder geplaatst conform het **Delivery Framework** zoals beschreven in `governance/delivery-framework.md`.
 
 **Fase-folders in projectrepositories**:
 ```
 <project-root>/
-├── A-Trigger/              — Business cases, initiaties
-├── B-Architectuur/         — ADR's, architectuurpatronen
-├── C-Specificatie/         — Requirements, features, datamodellen
-├── D-Ontwerp/              — API designs, technisch ontwerp
-├── E-Bouw/                 — Code, scripts, implementatie
-├── F-Validatie/            — Test rapporten, validatie
-├── G-Deployment/           — Release notes, deployment scripts
-└── U-Utility/              — Ondersteunende tools en utilities
+└── artefacten/
+    ├── a.trigger/          — Business cases, initiaties
+    ├── b.architectuur/     — ADR's, architectuurpatronen
+    ├── c.specificatie/     — Requirements, features, datamodellen
+    ├── d.ontwerp/          — API designs, technisch ontwerp
+    ├── e.bouw/             — Code, scripts, implementatie
+    ├── f.validatie/        — Test rapporten, validatie
+    ├── g.deployment/       — Release notes, deployment scripts
+    └── u.utility/          — Ondersteunende tools en utilities
 ```
+
+**Naamgevingsconventie**:
+- Alle fase-folders volgen het patroon: `<fase letter lowercase>.<fase naam lowercase>`
+- Voorbeelden: `a.trigger`, `b.architectuur`, `c.specificatie`, `d.ontwerp`
 
 ### 5.4 Automatische Folder-creatie
 **Wanneer een folder niet bestaat in de projectrepository, wordt deze automatisch aangemaakt door de agent.**
 
 **Werkwijze**:
 1. Agent ontvangt project-pad als input
-2. Agent bepaalt fase (A t/m G of U) op basis van eigen charter
-3. Agent controleert of fase-folder bestaat
-4. Indien niet: agent creëert folder-structuur
+2. Agent bepaalt fase (a t/m g of u) op basis van eigen charter
+3. Agent controleert of `artefacten/<fase>` folder bestaat
+4. Indien niet: agent creëert folder-structuur `artefacten/<fase letter lowercase>.<fase naam>`
 5. Agent genereert artefact in juiste folder
 
 **Voorbeeld**:
 - Agent `std.c.requirements-writer` werkt in fase C (Specificatie)
 - Agent ontvangt input: project-pad = `C:\projects\myapp`
-- Agent controleert of `C:\projects\myapp\C-Specificatie\` bestaat
-- Indien niet: agent creëert `C-Specificatie` folder
-- Agent genereert requirements in `C:\projects\myapp\C-Specificatie\requirements.md`
+- Agent controleert of `C:\projects\myapp\artefacten\c.specificatie\` bestaat
+- Indien niet: agent creëert folder-structuur `artefacten/c.specificatie/`
+- Agent genereert requirements in `C:\projects\myapp\artefacten\c.specificatie\requirements.md`
 
 ---
 
@@ -221,4 +227,5 @@ Bij conflict tussen dit beleid en de constitutie geldt altijd de constitutie.
 | 2025-12-30 | 1.1.0 | Toegevoegd: Artefact-creatie beleid (§5) — PowerShell scripts in agent-capabilities, artefacten in lokale repos, folder-structuur conform Delivery Framework, automatische folder-creatie | Moeder Agent |
 | 2025-12-30 | 1.2.0 | Toegevoegd: Agent Eco-systeem architectuur (§1) — Centraal agent-beheer, schone project-workspaces zonder agents/prompts, scheiding verantwoordelijkheden; Uitgebreid: Agent-gedrag (§9.2) | Moeder Agent |
 | 2025-12-30 | 1.3.0 | Toegevoegd: Verbod op git push door agents (§9.2.7) — agents mogen geen code pushen naar GitHub repositories | Human |
+| 2025-12-30 | 1.4.0 | Gewijzigd: Folder-structuur (§5.3, §5.4) — alle artefacten in centrale "artefacten" folder met naamgevingsconventie `<fase letter lowercase>.<fase naam>` | Human |
 
