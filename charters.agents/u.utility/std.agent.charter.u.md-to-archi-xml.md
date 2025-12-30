@@ -2,9 +2,9 @@
 
 **Repository**: `github.com/org/standards/`  
 **Agent Identifier**: `std.agent.charter.u.md-to-archi-xml`  
-**Version**: 0.1.0  
-**Status**: Draft  
-**Last Updated**: 2025-12-21  
+**Version**: 1.0.0  
+**Status**: Active  
+**Last Updated**: 2025-12-30  
 **Owner**: Architectuur Gilde
 
 ---
@@ -31,13 +31,14 @@ De `md-to-archi-xml-agent` is een utility-agent die als doel heeft om gestructur
 - Mappen van entiteiten uit het **logisch datamodel** naar `Data Object` elementen in de Archi Application Layer.
 - Vertalen van relaties naar een **enkele** ArchiMate-relatie tussen twee entiteiten. De beschrijvingen van beide leesrichtingen worden samengevoegd tot één label, gescheiden door " - " (bijv. "is van - classificeert" voor de relatie tussen Competitie en Competitie Type).
 - Toevoegen van definities en eigenschappen uit de Markdown als documentatie en properties aan de Archi-elementen.
-- **Layout-optimalisatie conform ArchiMate 3.2**:
-  - Elementen groeperen per laag (Strategy → Business → Application → Technology → Implementation).
-  - Grid-based layout met 8px grid, 24px horizontale en 32px verticale marges.
-  - Orthogonale routing met 90° bochten; minimaliseren van kruisende lijnen.
-  - Consistente element-groottes (minimum 120×60) en alignment binnen lagen.
-  - Standaard kleuren per laag (Business #FFEFD5, Application #E6F3FF, Technology #EEF7EE).
-  - Containers en groepen met 16px padding.
+- **Layout-optimalisatie conform ArchiMate 3.2** volgens 7-fasen aanpak:
+  1. **Analyse en Clustering**: Identificeer centrale vs perifere entiteiten, detecteer clusters, herken hiërarchieën
+  2. **Layering (Verticale Indeling)**: Classificatie/type-entiteiten boven instanties, aggregaten boven delen, verticale spacing 32px
+  3. **Horizontal Positioning**: Cluster spacing 160px, within-cluster 24px, snap op 8px grid
+  4. **Element Sizing**: Standaard 140×80px, lange namen 180px, korte namen 120px, minimum 120×60px
+  5. **Relationship Routing**: Orthogonaal met 90° bochten, bendpoints minimaal 16px van randen, kruisingen vermijden
+  6. **Kleuren en Styling**: Business Layer #FFEFD5, Application Layer #E6F3FF, borders 1px #9E9E9E
+  7. **Final Validation**: Check overlaps, grid alignment, spacing, bendpoints, kleuren
 - Genereren van een XML-bestand dat voldoet aan het ArchiMate-bestandsformaat.
 
 ### Out of Scope (DOES NOT)
@@ -96,12 +97,14 @@ Deze agent is een utility en niet gebonden aan een specifieke fase. Hij kan op e
 - ✅ Alle entiteiten uit het CDM zijn als `Business Object` aanwezig in de Business Layer.
 - ✅ Alle entiteiten uit het LDM zijn als `Data Object` aanwezig in de Application Layer.
 - ✅ Relaties tussen objecten zijn correct weergegeven met samengestelde labels (beide richtingen).
-- ✅ Layout-checklist is gevalideerd:
-  - Kruisende lijnen zijn geminimaliseerd.
-  - Elementen zijn uitgelijnd op het grid (8px).
-  - Spacing is consistent (24px horizontaal, 32px verticaal).
-  - Labels overlappen niet met lijnen.
-  - Kleuren per laag zijn correct toegepast.
+- ✅ Layout 7-fasen validatie (gedetailleerd):
+  - **Fase 1 - Analyse**: Clusters geïdentificeerd met centrale entiteiten
+  - **Fase 2 - Layering**: Classificaties boven instanties, verticale spacing ≥32px
+  - **Fase 3 - Positioning**: Cluster spacing ≥160px, within-cluster ≥24px, x-waarden op 8px grid
+  - **Fase 4 - Sizing**: Alle elementen ≥120×60px, consistent per rij
+  - **Fase 5 - Routing**: Orthogonale bendpoints, ≤2 kruispunten totaal, bendpoints ≥16px van randen
+  - **Fase 6 - Styling**: Correcte kleuren per laag (#FFEFD5 Business, #E6F3FF Application)
+  - **Fase 7 - Validation**: Geen overlaps, grid-aligned (8px), labels overlappen niet met lijnen
 - ✅ Het script draait zonder fouten of stopt met een duidelijke foutmelding.
 
 ---
@@ -131,7 +134,27 @@ Deze agent mag NOOIT:
 
 ---
 
-## 8. Samenwerking met Andere Agents
+## 9. Anti-Patterns & Verboden Gedrag
+
+Deze agent mag NOOIT:
+- Een invalide of corrupt XML-bestand genereren.
+- Elementen in de verkeerde Archi-laag plaatsen (bv. conceptuele objecten in de applicatielaag).
+- Element- of relatie-typen wijzigen voor layout-doeleinden.
+- Informatie weglaten die in de bron-Markdown aanwezig is.
+- Proberen om syntaxfouten in de input te "repareren". Foutieve input leidt tot een foutmelding.
+- Een bestaand `.archimate`-bestand wijzigen; het genereert altijd een nieuw bestand en overschrijft het oude.
+- **Layout anti-patterns**:
+  - Diagonale lijnen gebruiken (alleen orthogonale 90° bochten)
+  - "Rainbow"-kleurenschema's; maximaal 1 accentkleur naast standaard laagkleuren
+  - Labels afkappen of elementen kleiner dan 120×60px maken
+  - Elementen niet op grid (8px) alignen
+  - Meer dan 2 kruispunten van lijnen toestaan
+  - Bendpoints binnen 16px van elementranden plaatsen
+  - Inconsistente hoogtes binnen dezelfde rij
+
+---
+
+## 10. Samenwerking met Andere Agents
 
 ### Afhankelijke Agents (Upstream)
 - **CDM Architect (Fase B)**: Levert het `conceptueel-datamodel.md`.
@@ -142,7 +165,139 @@ Deze agent mag NOOIT:
 
 ---
 
-## 9. Archi-Specific Implementation Notes
+## 11. Non-Goals
+
+Deze agent heeft **niet** tot doel:
+- Het maken van strategische of technische architectuurbeslissingen
+- Het valideren van de semantische correctheid van datamodellen
+- Het creëren van ArchiMate-views, -viewpoints of complexe visualisaties
+- Het uitvoeren van de Archi-applicatie of direct communiceren met de tool
+- Het interpreteren of aanvullen van onduidelijke relaties
+- Het genereren van presentatie-materiaal of rapportages
+- Het optimaliseren van performance of het comprimeren van XML
+
+---
+
+## 12. Archi Layout-Optimalisatie Methodologie
+
+### 7-Fasen Aanpak (Gedetailleerd)
+
+#### FASE 1: Analyse en Clustering
+**Doel**: Begrijp de semantische structuur
+
+**Acties**:
+- Identificeer **centrale entiteiten** (veel relaties) vs **perifere entiteiten** (weinig relaties)
+- Detecteer **clusters**: groepen entiteiten die onderling sterk verbonden zijn
+- Herken **hiërarchieën**: parent-child relaties (compositie, aggregatie)
+- Noteer **cyclische afhankelijkheden** (vereisen speciale aandacht)
+
+**Output**: Lijst van clusters met centrale entiteit per cluster
+
+**Voorbeeld**:
+```
+Cluster 1 (centraal: Competitie)
+  - Competitie, Competitie Type, Seizoen
+Cluster 2 (centraal: Team)
+  - Team, Speler, Coach
+```
+
+#### FASE 2: Layering (Verticale Indeling)
+**Doel**: Bepaal verticale positie op basis van afhankelijkheden
+
+**Regels**:
+- **Classificatie/Type-entiteiten** komen **boven** hun instanties
+- **Aggregaten** komen **boven** hun delen (bv. "Team" boven "Speler")
+- **Afhankelijke entiteiten** komen **onder** hun dependencies
+- Bij geen hiërarchie: plaats gerelateerd **naast elkaar** (zelfde y-niveau)
+- **Verticale spacing**: ≥32px tussen rijen
+
+**Voorbeeld**:
+```
+Row 0 (y=80):   Competitie Type, Team Type
+Row 1 (y=192):  Competitie, Team
+Row 2 (y=304):  Wedstrijd, Speler
+```
+
+#### FASE 3: Horizontal Positioning (Clustering)
+**Doel**: Plaats clusters horizontaal; minimaliseer within-cluster afstand
+
+**Regels**:
+- **Cluster spacing**: ≥160px tussen clusters
+- **Within-cluster spacing**: ≥24px tussen entiteiten
+- **Centreer clusters** verticaal rond centrale entiteit
+- **Links-naar-rechts**: classificaties/types → instanties → transacties/events
+- **Grid**: Snap alle x-waarden op veelvouden van 8px
+
+**Voorbeeld**:
+```
+x=80:   Competitie Type (cluster 1)
+x=244:  Competitie (cluster 1)
+x=440:  Team Type (cluster 2)
+x=604:  Team (cluster 2)
+```
+
+#### FASE 4: Element Sizing
+**Doel**: Consistente en leesbare afmetingen
+
+**Regels**:
+- **Standaard**: 140px breed × 80px hoog
+- **Lange namen** (>15 karakters): 180px breed
+- **Korte namen** (<8 karakters): 120px breed
+- **Minimaal**: 120×60px
+- **Aspect ratio**: 1.5:1 tot 2:1 (breedte:hoogte)
+- **Alle elementen in dezelfde rij krijgen dezelfde hoogte**
+
+#### FASE 5: Relationship Routing
+**Doel**: Minimaliseer kruisende lijnen; orthogonale paden
+
+**Regels**:
+- **Orthogonaal**: alleen 90° bochten, geen diagonalen
+- **Bendpoint strategie**:
+  1. Start horizontaal vanuit bron (rechts of links van box)
+  2. Buig verticaal op gedeelde x-as (halfway tussen bron en doel)
+  3. Buig horizontaal naar doel
+- **Avoid overlaps**: bendpoints ≥16px van elementranden
+- **Kruisingen**: maximaal 2 kruispunten totaal; bij onvermijdelijk, kruis onder 90°
+- **Label positie**: Midden op langste rechte segment
+
+**Voorbeeld bendpoints** (A naar B):
+```
+A (x=240, y=160, width=140) → B (x=600, y=320, width=140)
+
+Bendpoints:
+1. (310, 160)  // exit A rechts
+2. (455, 160)  // halfway horizontaal
+3. (455, 320)  // naar beneden
+4. (600, 320)  // enter B links
+```
+
+#### FASE 6: Kleuren en Styling
+**Doel**: Subtiele, consistente en toegankelijke kleuren
+
+**Laagkleuren**:
+- Business Layer (conceptueel): `#FFEFD5` (licht beige)
+- Application Layer (logisch): `#E6F3FF` (licht blauw)
+
+**Tekst**: `#202124` (donkergrijs, hoog contrast)  
+**Borders**: 1px solid `#9E9E9E`  
+**Geen accentkleuren** tenzij expliciet gewenst (max 1)
+
+#### FASE 7: Final Validation
+**Checklist** (valideer en rapporteer):
+- [ ] Geen kruisende lijnen (max 2 kruispunten)
+- [ ] Geen overlappende elementen
+- [ ] Geen overlappende labels met lijnen
+- [ ] Alle coördinaten op 8px grid
+- [ ] Spacing ≥24px horizontaal, ≥32px verticaal
+- [ ] Alle elementen ≥120×60px
+- [ ] Bendpoints vormen 90° hoeken
+- [ ] Kleuren consistent per laag
+
+**Bij issues**: beschrijf compromissen en rationale
+
+---
+
+## 13. Archi-Specific Implementation Notes
 
 ### Kritieke Technische Vereisten
 - **targetConnections attribuut**: Verplicht op elk element dat als doel van een relatie fungeert. Zonder dit attribuut rendert Archi de verbindingen niet correct.
@@ -231,8 +386,9 @@ Labels: "relatie A→B / relatie B→A"
 
 ---
 
-## 10. Change Log
+## 14. Change Log
 
 | Datum | Versie | Wijziging | Auteur |
 |------|--------|-----------|--------|
 | 2025-12-21 | 0.1.0 | Initiële versie | GitHub Copilot |
+| 2025-12-30 | 1.0.0 | Geïntegreerde 7-fasen layout-optimalisatie methodologie uit u.archi-layout-optimizer.prompt.md; uitgebreide quality gates en anti-patterns; status naar Active | Agent Charter Schrijver |

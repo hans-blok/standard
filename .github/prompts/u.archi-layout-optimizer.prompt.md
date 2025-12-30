@@ -343,6 +343,140 @@ Input → [FASE 1: Analyse] → clusters
 
 ---
 
+## Archi-Specific Implementation Notes
+
+### KRITIEKE TECHNISCHE VEREISTEN
+
+**1. targetConnections Attribuut (VERPLICHT)**
+Elk `<child xsi:type="archimate:DiagramObject">` dat als target dient van één of meer connections MOET een `targetConnections` attribuut hebben:
+```xml
+<child xsi:type="archimate:DiagramObject" id="id-diag-seizoen" 
+       archimateElement="id-bo-seizoen" 
+       fillColor="#ffefd5" 
+       targetConnections="id-conn-03 id-conn-15">
+```
+**Zonder dit attribuut worden connections niet correct gerenderd in Archi!**
+
+**2. Expliciete Bendpoints (ALTIJD)**
+Elke connection MOET bendpoints hebben, zelfs voor rechte verticale/horizontale lijnen:
+```xml
+<sourceConnection xsi:type="archimate:Connection" id="id-conn-01" 
+                  source="id-diag-competitietype" 
+                  target="id-diag-competitie" 
+                  archimateRelationship="id-rel-01">
+  <bendpoint startX="0" startY="75" endX="0" endY="-75"/>
+</sourceConnection>
+```
+
+**3. Bidirectionele Relaties Vereenvoudigen**
+Voor CDM/datamodellen met bidirectionele relaties (A↔B):
+- **Model**: behoud ALLE relaties (beide richtingen)
+- **View**: toon ALLEEN primaire flow (unidirectioneel)
+- Vermijd 16 lijnen tussen 7 entiteiten - kies max 8 primaire relaties
+
+**Voorbeeld**: In plaats van:
+- "classificeert" (Type→Competitie) 
+- "is van type" (Competitie→Type)
+
+Toon in view alleen: "classificeert" (Type→Competitie)
+
+### PRAKTISCHE SPACING WAARDEN (Getest in Archi)
+
+**Verticale spacing tussen rijen:**
+- Minimaal: 140px (niet 32px zoals in theorie!)
+- Optimaal: 150px voor grote boxen
+- Formule: `nextY = currentY + currentHeight + 50px`
+
+**Horizontale spacing symmetrische elementen:**
+- Vanaf centrum: ±135px tot ±160px
+- Voor parallelle lijnen (thuis/uit): ±48px offset
+
+**Box afmetingen:**
+- **Standaard**: 220×90 (niet 140×80)
+- **Minimaal**: 200×80
+- Kleinere boxen (120×60) zijn te klein voor ArchiMate elementnamen
+
+**Canvas dimensies:**
+- Breedte: 760-800px voor 3 kolommen
+- Hoogte: 700-750px voor 5 rijen
+
+### LAYOUT STRATEGIEËN PER PATROON
+
+**Classificatie Hiërarchie (verticaal):**
+```
+Type (y=40)
+  ↓ classificeert
+Instantie (y=180)
+  ↓ wordt gespeeld in
+Editie (y=320)
+```
+→ Gebruik verticale centerline, spacing 140px
+
+**Hub Pattern (team met speler/coach):**
+```
+     Speler (x=30)  ←  Team (x=270)  →  Coach (x=510)
+```
+→ Symmetrisch, ±240px offset vanaf centrum
+
+**Terugkoppeling (wedstrijd→seizoen):**
+```
+Seizoen (y=320) ←┐
+                 │ 160px rechts
+Wedstrijd (y=600)┘
+```
+→ Route via rechterkant met bendpoints op ±160px offset
+
+### VERMIJD DEZE FOUTEN
+
+❌ **FOUT**: Geen targetConnections attribuut
+```xml
+<child id="id-diag-team" archimateElement="id-bo-team">
+```
+
+✅ **CORRECT**: Met targetConnections
+```xml
+<child id="id-diag-team" archimateElement="id-bo-team" 
+       targetConnections="id-conn-06">
+```
+
+---
+
+❌ **FOUT**: Geen bendpoints voor rechte lijn
+```xml
+<sourceConnection id="id-conn-01" source="A" target="B" 
+                  archimateRelationship="id-rel-01"/>
+```
+
+✅ **CORRECT**: Expliciete bendpoints
+```xml
+<sourceConnection id="id-conn-01" source="A" target="B" 
+                  archimateRelationship="id-rel-01">
+  <bendpoint startX="0" startY="75" endX="0" endY="-75"/>
+</sourceConnection>
+```
+
+---
+
+❌ **FOUT**: Alle 16 bidirectionele relaties in één view
+```
+Team ⇄ Speler (2 lijnen)
+Team ⇄ Coach (2 lijnen)
+Team ⇄ Seizoen (2 lijnen)
+Team ⇄ Wedstrijd (4 lijnen: thuis/uit × beide richtingen)
+= 10+ lijnen naar Team = chaos
+```
+
+✅ **CORRECT**: Alleen primaire flow in view
+```
+Team → Speler (1 lijn "heeft als speler")
+Team → Coach (1 lijn "wordt geleid door")
+Seizoen → Team (1 lijn "bevat")
+Team → Wedstrijd (2 lijnen: "speelt thuis in", "speelt uit in")
+= 5 lijnen vanaf Team = leesbaar
+```
+
+---
+
 ## Start Commando
 
 Wanneer je deze prompt krijgt met een datamodel, antwoord:
@@ -350,7 +484,8 @@ Wanneer je deze prompt krijgt met een datamodel, antwoord:
 1. Welke **clusters** zie je? (fase 1)
 2. Welke **rijen** stel je voor? (fase 2)
 3. Wat is de **horizontale indeling**? (fase 3)
-4. Geef de **complete JSON-output** (fase 4-6)
-5. Rapporteer **validatieresultaten** (fase 7)
+4. **LET OP**: Bij bidirectionele relaties - welke primaire flow kies je voor de view?
+5. Geef de **complete XML-output** met targetConnections en bendpoints (fase 4-6)
+6. Rapporteer **validatieresultaten** (fase 7)
 
 Begin nu met de layout-optimalisatie!
