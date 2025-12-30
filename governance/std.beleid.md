@@ -69,6 +69,19 @@ De Moeder Agent is verantwoordelijk voor:
 Alle agent-ontwikkeling, charter-wijzigingen en governance-besluiten volgen de principes en werkwijze zoals beschreven in het charter van de Moeder Agent.
 
 ---
+### 3.1 Git Beperkingen
+Agents hebben **strikte beperkingen** op Git-operaties:
+
+- ❌ **Geen push naar GitHub**: Agents mogen NOOIT direct pushen naar GitHub repositories
+- ✅ **Lokaal werken**: Agents mogen alleen lokale bestanden creëren en wijzigen
+- ✅ **Git add/commit**: Agents mogen lokaal committen (optioneel, alleen indien expliciet gevraagd)
+- ❌ **Geen remote operaties**: Geen push, pull, fetch zonder menselijke tussenkomst
+- ✅ **Menselijke controle**: Alle wijzigingen moeten door een mens worden gereviewd en gepushed
+
+**Rationale**: 
+- Kwaliteitscontrole door menselijke review voordat code naar remote gaat
+- Voorkomen van ongewenste of foutieve wijzigingen in gedeelde repositories
+- Behoud van traceerbaarheid en verantwoordelijkheid
 
 ## 4. Documentstructuur
 
