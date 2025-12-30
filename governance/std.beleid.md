@@ -1,16 +1,43 @@
 # Beleid — Standards Repository
 
 **Repository**: standards  
-**Versie**: 1.0.0  
+**Versie**: 1.2.0  
 **Status**: Active  
-**Last Updated**: 2025-12-14  
+**Last Updated**: 2025-12-30  
 **Eigenaar**: Architecture & AI Enablement
 
 ---
 
 ## 1. Context en Doel
 
-De **standards** repository bevat alle governance-documenten, agent-charters, fase-charters en templates die de basis vormen voor gestructureerde en consistente AI-agent-ontwikkeling binnen het ecosysteem.
+De **standards** repository bevat alle governance-documenten, agent-charters, fase-charters en templates die de basis vormen voor gestructureerde en consistente AI-agent-ontwikkeling binnen het **Agent Eco-systeem**.
+
+### Agent Eco-systeem Architectuur
+
+Dit beleid is onderdeel van een **centraal agent eco-systeem** met de volgende architectuur:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Agent Eco-systeem (Centraal)                               │
+│  ├── standards/          — Governance, charters, templates  │
+│  ├── agent-capabilities/ — PowerShell scripts, tooling      │
+│  └── [andere centrale repos]                                │
+└─────────────────────────────────────────────────────────────┘
+                          ↓ aanroepen
+┌─────────────────────────────────────────────────────────────┐
+│  Project-Workspaces (Lokaal, "schoon")                      │
+│  ├── /A-Trigger/         — Gegenereerde artefacten          │
+│  ├── /B-Architectuur/    — Gegenereerde artefacten          │
+│  ├── /C-Specificatie/    — Gegenereerde artefacten          │
+│  └── ...                                                     │
+│  GEEN .github/agents/, GEEN .github/prompts/                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Kernprincipes**:
+- **Centraal beheer**: Alle agents, charters en governance blijven in centrale repositories
+- **Schone project-workspaces**: Project-repositories bevatten GEEN agents of prompts
+- **Scheiding van verantwoordelijkheden**: Agent-definitie (centraal) vs. artefact-generatie (lokaal)
 
 Dit beleid beschrijft de specifieke regels en werkwijzen die gelden binnen deze repository en die aanvullend zijn op de algemene constitutie.
 
@@ -57,7 +84,57 @@ desc-agents/          — Beknopte agent-beschrijvingen (overzicht)
 
 ---
 
-## 5. Charter-eisen
+## 5. Artefact-creatie en Project-structuur
+
+### 5.1 PowerShell Scripts Locatie
+Alle PowerShell scripts voor het realiseren van artefacten bevinden zich in de repository **agent-capabilities**.
+
+### 5.2 Artefact-locatie: Lokale Project-Workspaces
+Alle artefacten die door agents worden gegenereerd, worden aangemaakt in de **lokale project-workspace**, niet in de standards repository.
+
+**Project-Workspace Principes**:
+- **Schone workspace**: Project-workspaces bevatten GEEN `.github/agents/` of `.github/prompts/` folders
+- **Alleen artefacten**: Project-workspaces bevatten uitsluitend gegenereerde artefacten en applicatiecode
+- **Centraal agent-beheer**: Alle agents blijven in het centrale agent eco-systeem (standards repository)
+- **Input via project-pad**: Agents ontvangen als input het **project-pad** (lokale workspace waar gewerkt wordt)
+- **Output naar project**: Artefacten worden gegenereerd in de project-specifieke locatie
+
+### 5.3 Folder-structuur conform Delivery Framework
+Alle artefacten worden in folders geplaatst conform het **Delivery Framework** zoals beschreven in `governance/delivery-framework.md`.
+
+**Fase-folders in projectrepositories**:
+```
+<project-root>/
+├── A-Trigger/              — Business cases, initiaties
+├── B-Architectuur/         — ADR's, architectuurpatronen
+├── C-Specificatie/         — Requirements, features, datamodellen
+├── D-Ontwerp/              — API designs, technisch ontwerp
+├── E-Bouw/                 — Code, scripts, implementatie
+├── F-Validatie/            — Test rapporten, validatie
+├── G-Deployment/           — Release notes, deployment scripts
+└── U-Utility/              — Ondersteunende tools en utilities
+```
+
+### 5.4 Automatische Folder-creatie
+**Wanneer een folder niet bestaat in de projectrepository, wordt deze automatisch aangemaakt door de agent.**
+
+**Werkwijze**:
+1. Agent ontvangt project-pad als input
+2. Agent bepaalt fase (A t/m G of U) op basis van eigen charter
+3. Agent controleert of fase-folder bestaat
+4. Indien niet: agent creëert folder-structuur
+5. Agent genereert artefact in juiste folder
+
+**Voorbeeld**:
+- Agent `std.c.requirements-writer` werkt in fase C (Specificatie)
+- Agent ontvangt input: project-pad = `C:\projects\myapp`
+- Agent controleert of `C:\projects\myapp\C-Specificatie\` bestaat
+- Indien niet: agent creëert `C-Specificatie` folder
+- Agent genereert requirements in `C:\projects\myapp\C-Specificatie\requirements.md`
+
+---
+
+## 6. Charter-eisen
 
 Alle agents in dit ecosysteem:
 - Hebben een volledig ingevuld charter conform `templates/agent.charter.template.md`
@@ -68,7 +145,7 @@ Alle agents in dit ecosysteem:
 
 ---
 
-## 6. Wijzigingsproces
+## 7. Wijzigingsproces
 
 ### Governance-documenten
 - **Constitutie**: Alleen inhoudelijke wijzigingen door mens; redactionele wijzigingen door Logos Agent
@@ -82,7 +159,7 @@ Alle agents in dit ecosysteem:
 
 ---
 
-## 7. Kwaliteitsnormen
+## 8. Kwaliteitsnormen
 
 Alle artefacten in deze repository voldoen aan:
 - **Volledigheid**: Geen ontbrekende secties of impliciete informatie
@@ -93,8 +170,9 @@ Alle artefacten in deze repository voldoen aan:
 
 ---
 
-## 8. Agent-gedrag binnen deze Repository
+## 9. Agent-gedrag binnen Agent Eco-systeem
 
+### 9.1 Agents in Centrale Repository (standards)
 Agents die binnen deze repository werken:
 1. Lezen eerst alle governance-documenten (constitutie, beleid, relevante charters)
 2. Handelen conform hun charter en binnen hun scope
@@ -102,9 +180,18 @@ Agents die binnen deze repository werken:
 4. Documenteren aannames expliciet
 5. Leveren alleen complete, gevalideerde outputs
 
+### 9.2 Agents Werkend op Project-Workspaces
+Agents die artefacten genereren in project-workspaces:
+1. Worden aangeroepen vanuit de **centrale agent eco-systeem repository**
+2. Ontvangen als input het **project-pad** van de lokale workspace
+3. Genereren artefacten in fase-folders binnen de project-workspace
+4. Creëren automatisch benodigde folder-structuur indien deze niet bestaat
+5. Plaatsen **GEEN** agent-definities of prompts in de project-workspace
+6. Houden project-workspaces "schoon" en gefocust op artefacten
+
 ---
 
-## 9. Relatie tot Constitutie
+## 10. Relatie tot Constitutie
 
 Dit beleid is ondergeschikt aan `governance/constitutie.md`.
 
@@ -112,9 +199,11 @@ Bij conflict tussen dit beleid en de constitutie geldt altijd de constitutie.
 
 ---
 
-## 10. Change Log
+## 11. Change Log
 
 | Datum | Versie | Wijziging | Auteur |
 |------|--------|-----------|--------|
 | 2025-12-14 | 1.0.0 | Initiële versie | Moeder Agent |
+| 2025-12-30 | 1.1.0 | Toegevoegd: Artefact-creatie beleid (§5) — PowerShell scripts in agent-capabilities, artefacten in lokale repos, folder-structuur conform Delivery Framework, automatische folder-creatie | Moeder Agent |
+| 2025-12-30 | 1.2.0 | Toegevoegd: Agent Eco-systeem architectuur (§1) — Centraal agent-beheer, schone project-workspaces zonder agents/prompts, scheiding verantwoordelijkheden; Uitgebreid: Agent-gedrag (§9.2) | Moeder Agent |
 
