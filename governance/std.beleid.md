@@ -1,7 +1,7 @@
 # Beleid — Standards Repository
 
 **Repository**: standards  
-**Versie**: 1.2.0  
+**Versie**: 1.3.0  
 **Status**: Active  
 **Last Updated**: 2025-12-30  
 **Eigenaar**: Architecture & AI Enablement
@@ -188,6 +188,7 @@ Agents die artefacten genereren in project-workspaces:
 4. Creëren automatisch benodigde folder-structuur indien deze niet bestaat
 5. Plaatsen **GEEN** agent-definities of prompts in de project-workspace
 6. Houden project-workspaces "schoon" en gefocust op artefacten
+7. **Pushen GEEN code naar GitHub repositories** — agents mogen wijzigingen doorvoeren in de lokale workspace, maar het pushen naar remote repositories (git push) is niet toegestaan
 
 ---
 
@@ -206,4 +207,5 @@ Bij conflict tussen dit beleid en de constitutie geldt altijd de constitutie.
 | 2025-12-14 | 1.0.0 | Initiële versie | Moeder Agent |
 | 2025-12-30 | 1.1.0 | Toegevoegd: Artefact-creatie beleid (§5) — PowerShell scripts in agent-capabilities, artefacten in lokale repos, folder-structuur conform Delivery Framework, automatische folder-creatie | Moeder Agent |
 | 2025-12-30 | 1.2.0 | Toegevoegd: Agent Eco-systeem architectuur (§1) — Centraal agent-beheer, schone project-workspaces zonder agents/prompts, scheiding verantwoordelijkheden; Uitgebreid: Agent-gedrag (§9.2) | Moeder Agent |
+| 2025-12-30 | 1.3.0 | Toegevoegd: Verbod op git push door agents (§9.2.7) — agents mogen geen code pushen naar GitHub repositories | Human |
 
